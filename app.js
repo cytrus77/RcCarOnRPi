@@ -58,33 +58,6 @@ io.sockets.on('connection', function (socket)
 	{
 		logcount = logcount + 1;
 
-		// rate limit accelration only
-		// we want normal de-cceleration as this doesn't drain the battery
-		if(0)//(data.gamma > .175) && (data.gamma > smoothed_throttle)) //fwd accel
-		{
-			//if we went full back to full fwd... skip some rate limiting
-			if(smoothed_throttle < .14)
-			{
-				smoothed_throttle = .14;
-			}
-			// .035 = fwd range; .0035 = .5s .: .01 is roughy 1.5s to full accel @ 20Hz
-			smoothed_throttle += .001;
-		}
-			if(0)//else if ((data.gamma < .175) && (data.gamma < smoothed_throttle)) //rev accel
-		{ 
-			// if we go full fwd to full back... 
-			if(smoothed_throttle > .14)
-			{
-				smoothed_throttle = .14; 
-			}
-			// rate limit throttle to prevent power resets
-			smoothed_throttle -= .0003;   // reverse is non linear due to brakeing option so make it even slower
-		}
-		else 
-			smoothed_throttle = data.gamma; //slow down normally
-			
-		//smoothed_throttle = data.gamma; //uncomment this line if using dedicated Pi battery pack
-			
 		// dont let char echos slow dn the app; we are running at 20Hz
 		// dont le the console limit this due to slow echoing of chars
 		if(logcount == 10)
