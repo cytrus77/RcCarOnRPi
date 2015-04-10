@@ -79,7 +79,7 @@ io.sockets.on('connection', function (socket)
 		}
 		else
 		{
-			temp_kierunek = abs(temp_kierunek);
+			temp_kierunek = Math.abs(temp_kierunek);
 			doprzodu = 0;
 			if(temp_kierunek > 1) {temp_kierunek = 1;}
 			
