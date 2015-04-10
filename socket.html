@@ -65,7 +65,7 @@ window.ondeviceorientation = function(event)
     	}
     
     	beta = tmp_beta; //update global
-
+	beta = event.beta; //testowo
     	// throttle...
 	// rather than going 0-360 gamma counts in + or - 90 degree quadrants.
 	// this can be a pain as if you go past 90 degrees it can start
@@ -96,7 +96,7 @@ window.ondeviceorientation = function(event)
     	}
 
     	gamma = tmp_gamma; //update global
-  
+  	gamma = event.gamma; // test
     
 }//END ondviceorientation
 
