@@ -107,7 +107,7 @@ io.sockets.on('connection', function (socket)
 			//@ 2 Hz
 			logcount = 0;
 			console.log("Beta: "+data.beta+" Gamma: "+data.gamma);
-			console.log("Przod: "+doprzodu*100+"%  Tyl: "+dotylu*100+"%  Lewo: "+wlewo*100+"%  Prawo: "+wprawo*100);
+			console.log("Przod: "+Math.round(doprzodu*100)+"%  Tyl: "+Math.round(dotylu*100)+"%  Lewo: "+Math.round(wlewo*100)+"%  Prawo: "+Math.round(wprawo*100));
 		}
 		
 		//control car using clever pwm gpio library
