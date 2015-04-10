@@ -23,8 +23,11 @@ var pin_przod = 17;
 var pin_wsteczny = 18;
 var pin_wlewo = 22;
 var pin_wprawo = 23;
-var smoothed_throttle = 0;
 var logcount = 0;
+var doprzodu = 0; //w %
+var dotylu = 0;
+var wlewo = 0;
+var wprawo = 0;
 
 
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
@@ -55,22 +58,62 @@ io.sockets.on('connection', function (socket)
 	//got phone msg
 	socket.on('fromclient', function (data) 
 	{
+		var temp_kierunek, temp_skret;
+		
+		temp_kierunek = data.gamma / 45;
+		
+		if(temp_kierunek >= 0)
+		{
+			if(temp_kierunek > 1) {temp_kierunek = 1;}
+			
+			if(temp_kierunek - doprzodu < 0.05 || doprzodu - temp_kierunek < 0.05)
+			{
+				doprzodu = temp_kierunek;
+			}
+			else
+			{
+				if(temp_kierunek > doprzodu) { doprzodu = doprzodu + 0.05;}
+				else { doprzodu = doprzodu - 0.05;}
+			}
+		}
+		
 		logcount = logcount + 1;
-
+		
+		
+		
+		
 		// dont let char echos slow dn the app; we are running at 20Hz
 		// dont le the console limit this due to slow echoing of chars
 		if(logcount == 10)
 		{
 			//@ 2 Hz
 			logcount = 0;
-			console.log("Beta: "+data.beta+" Gamma: "+data.gamma+" smoothed: "+smoothed_throttle);				
+			console.log("Beta: "+data.beta+" Gamma: "+data.gamma+" smoothed: "+smoothed_throttle);
+			console.log("Przod: "+data.beta+"%  Tyl: "+data.gamma+"%  Lewo: "+smoothed_throttle+"%  Prawo: "+smoothed_throttle);
 		}
 		
 		//control car using clever pwm gpio library
-	//	piblaster.setPwm(pin_przod, smoothed_throttle); //throttle using soft pwm
-	//	piblaster.setPwm(pin_wsteczny, data.beta); //throttle using soft pwm
-	//	piblaster.setPwm(pin_wlewo, data.beta); //throttle using soft pwm
-	//	piblaster.setPwm(pin_wprawo, data.beta); //throttle using soft pwm
+		if(doprzodu > 0)
+		{
+			piblaster.setPwm(pin_przod, doprzodu); //throttle using soft pwm
+			piblaster.setPwm(pin_wsteczny, 0); //throttle using soft pwm
+		}
+		else
+		{
+			piblaster.setPwm(pin_przod, 0); //throttle using soft pwm
+			piblaster.setPwm(pin_wsteczny, dotylu); //throttle using soft pwm
+		}
+		
+		if(wlewo > 0)
+		{
+			piblaster.setPwm(pin_wlewo, wlewo); //throttle using soft pwm
+			piblaster.setPwm(pin_wprawo, 0); //throttle using soft pwm
+		}
+		else
+		{
+			piblaster.setPwm(pin_wlewo, 0); //throttle using soft pwm
+			piblaster.setPwm(pin_wprawo, wprawo); //throttle using soft pwm
+		}
 		
 		clearInterval(lastAction); //stop emergency stop timer
 		lastAction = setInterval(emergencyStop,2000); //set emergency stop timer for 1 second
