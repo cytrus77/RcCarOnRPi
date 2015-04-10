@@ -9,14 +9,9 @@
 var socket = io.connect(window.location.hostname+':8080');
 var nIntervId;
  
-//steering min and max pwm cmds
-var maxbeta = 1.000; //r limit
-var minbeta = .000; //l limit
 var beta = .000;
 var gamma = .000;
-//throttle min and max pwm cmds
-var mingamma = .000; //backwards limit
-var maxgamma = 1.000; //forward limit
+
 
 // This function is called when the page 1st loads on your phone
 //
@@ -61,7 +56,7 @@ window.ondeviceorientation = function(event)
 
 
 </script>
-<body bgcolor="teal"> 
+<body bgcolor="white"> 
 </head><body>
 
  <div id=info><font size=7><pre></pre>picar</pre></font></div>
