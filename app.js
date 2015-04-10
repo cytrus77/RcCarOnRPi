@@ -60,7 +60,7 @@ io.sockets.on('connection', function (socket)
 
 		// rate limit accelration only
 		// we want normal de-cceleration as this doesn't drain the battery
-		if((data.gamma > .175) && (data.gamma > smoothed_throttle)) //fwd accel
+		if(0)//(data.gamma > .175) && (data.gamma > smoothed_throttle)) //fwd accel
 		{
 			//if we went full back to full fwd... skip some rate limiting
 			if(smoothed_throttle < .14)
@@ -70,7 +70,7 @@ io.sockets.on('connection', function (socket)
 			// .035 = fwd range; .0035 = .5s .: .01 is roughy 1.5s to full accel @ 20Hz
 			smoothed_throttle += .001;
 		}
-		else if ((data.gamma < .175) && (data.gamma < smoothed_throttle)) //rev accel
+			if(0)//else if ((data.gamma < .175) && (data.gamma < smoothed_throttle)) //rev accel
 		{ 
 			// if we go full fwd to full back... 
 			if(smoothed_throttle > .14)
@@ -87,9 +87,9 @@ io.sockets.on('connection', function (socket)
 			
 		// dont let char echos slow dn the app; we are running at 20Hz
 		// dont le the console limit this due to slow echoing of chars
-		if(logcount == 20)
+		if(logcount == 10)
 		{
-			//@ 1 Hz
+			//@ 2 Hz
 			logcount = 0;
 			console.log("Beta: "+data.beta+" Gamma: "+data.gamma+" smoothed: "+smoothed_throttle);				
 		}
