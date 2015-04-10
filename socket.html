@@ -1,0 +1,114 @@
+<html>
+<head>
+<script src="jquery-2.0.3.min.js" language="javascript"></script>
+<script src="/socket.io/socket.io.js"></script>
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0;" />
+<script>
+
+//------ Define your variables here
+var socket = io.connect(window.location.hostname+':8080');
+var nIntervId;
+ 
+//steering min and max pwm cmds
+var maxbeta = 1.000; //r limit
+var minbeta = .000; //l limit
+
+//throttle min and max pwm cmds
+var mingamma = .000; //backwards limit
+var maxgamma = 1.000; //forward limit
+
+// This function is called when the page 1st loads on your phone
+//
+$(function()
+{
+    //send data to the pi at 20Hz
+    nIntervId = setInterval(SendToPi ,50);
+ 
+    window.gyro = 'ready';
+    alert('Ready -- Lets race !');
+  
+});
+
+
+// This fuction is called @ 20Hz
+//
+function SendToPi()
+{
+    	if (window.gyro == 'ready')  
+   	{ 
+		//dont send another command until last one doone... its only a little pi
+		window.gyro = 'notready';
+		socket.emit('fromclient', { beta: beta, gamma: gamma } );
+		window.gyro = 'ready';
+    	}//END if
+
+}//End SendToPI
+
+
+
+// This fuction is called when the phone orientation changes
+//
+window.ondeviceorientation = function(event) 
+{
+    	var tmp_beta, tmp_gamma;
+    
+    	//steer
+    	tmp_beta = .001167 * event.beta;
+    	//iphone beta =  .001167 * event.beta * -1) + .14;
+    	if (tmp_beta >= maxbeta) 
+    	{
+		tmp_beta=maxbeta;
+    	}
+    	if (tmp_beta <= minbeta) 
+    	{
+		tmp_beta=minbeta;
+    	}
+    
+    	beta = tmp_beta; //update global
+
+    	// throttle...
+	// rather than going 0-360 gamma counts in + or - 90 degree quadrants.
+	// this can be a pain as if you go past 90 degrees it can start
+	// going the full opposite dir!
+    	// past -90 (full reverse) it count down from + 90 (which would cause car to go full fwds)
+    	// below 0 (full fwds) it counts up (which would get ignored)
+	// this will just confuse the operator so we'll mask i out so it stays in the 0- (-90) range
+    	tmp_gamma = event.gamma;
+    	if(tmp_gamma > 45)
+	{
+		tmp_gamma = 45; // gone past full reverse
+	}
+	else if (tmp_gamma > 0)	
+	{
+		tmp_gamma = 0;	//gone past full fwds
+	}
+	
+    	tmp_gamma = tmp_gamma ;
+    	//iphone gamma = -0.00125 * Math.round(event.gamma) + .175;
+
+    	if (tmp_gamma >= maxgamma) 
+    	{
+	//	tmp_gamma=maxgamma;
+    	}
+    	if (tmp_gamma <= mingamma) 
+    	{
+	//	tmp_gamma=mingamma;
+    	}
+
+    	gamma = tmp_gamma; //update global
+  
+    
+}//END ondviceorientation
+
+
+
+</script>
+<body bgcolor="teal"> 
+</head><body>
+
+ <div id=info><font size=7><pre></pre>picar</pre></font></div>
+ <div id=info><font size=3><pre></pre>https://github.com/lawsonkeith/picar</pre></font></div>
+ 
+ </body>
+ </head>
+</html>
