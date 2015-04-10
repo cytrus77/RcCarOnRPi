@@ -29,7 +29,7 @@ var dotylu = 0;
 var wlewo = 0;
 var wprawo = 0;
 var opoznienie_przyspieszenia = 0.02;
-
+var opoznienie_skrecania = 0.10;
 
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
 
@@ -61,7 +61,10 @@ io.sockets.on('connection', function (socket)
 	{
 		var temp_kierunek, temp_skret;
 		
+		logcount = logcount + 1;
+		
 		temp_kierunek = data.gamma / 45;
+		temp_skret = data.beta / 45;
 		
 		if(temp_kierunek >= 0)
 		{
@@ -95,8 +98,37 @@ io.sockets.on('connection', function (socket)
 			}
 		}
 		
-		logcount = logcount + 1;
-		
+		if(temp_skret >= 0)
+		{
+			wlewo = 0;
+			if(temp_skret > 1) {temp_skret = 1;}
+			
+			if( Math.abs(temp_skret - wprawo) < opoznienie_skrecania)
+			{
+				wprawo = temp_skret;
+			}
+			else
+			{
+				if(temp_skret > wprawo) { wprawo = wprawo + opoznienie_skrecania;}
+				else { wprawo = wprawo - opoznienie_skrecania;}
+			}
+		}
+		else
+		{
+			temp_skret = Math.abs(temp_skret);
+			wprawo = 0;
+			if(temp_skret > 1) {temp_skret = 1;}
+			
+			if( Math.abs(temp_skret - wlewo) < opoznienie_skrecania)
+			{
+				wlewo = temp_skret;
+			}
+			else
+			{
+				if(temp_skret > wlewo) { wlewo = wlewo + opoznienie_skrecania;}
+				else { wlewo = wlewo - opoznienie_skrecania;}
+			}
+		}
 		
 		
 		
