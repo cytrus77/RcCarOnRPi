@@ -19,6 +19,10 @@ function handler(request, response)
   file.serve(request, response);
 };
 
+var pin_przod = 17;
+var pin_wsteczny = 18;
+var pin_wlewo = 22;
+var pin_wprawo = 23;
 var smoothed_throttle = 0;
 var logcount = 0;
 var old_gamma = 0;
@@ -33,8 +37,11 @@ lastAction = "";
 function emergencyStop()
 {
 	//enter 0 point here specific to your pwm control
-  	piblaster.setPwm(17, 0); //thr
- 	piblaster.setPwm(18, 0); //spd
+  	piblaster.setPwm(pin_przod, 0);
+ 	piblaster.setPwm(pin_wsteczny, 0);
+ 	piblaster.setPwm(pin_wlewo, 0);
+ 	piblaster.setPwm(pin_wprawo, 0);
+ 	
   	console.log('###EMERGENCY STOP - signal lost or shutting down');
 }//END emergencyStop
 
@@ -88,9 +95,11 @@ io.sockets.on('connection', function (socket)
 		}
 		
 		//control car using clever pwm gpio library
-		piblaster.setPwm(17, smoothed_throttle); //throttle using soft pwm
-		piblaster.setPwm(18, data.beta); //throttle using soft pwm
-
+		piblaster.setPwm(pin_przod, smoothed_throttle); //throttle using soft pwm
+		piblaster.setPwm(pin_wsteczny, data.beta); //throttle using soft pwm
+		piblaster.setPwm(pin_wlewo, data.beta); //throttle using soft pwm
+		piblaster.setPwm(pin_wprawo, data.beta); //throttle using soft pwm
+		
 		clearInterval(lastAction); //stop emergency stop timer
 		lastAction = setInterval(emergencyStop,2000); //set emergency stop timer for 1 second
 				
