@@ -28,6 +28,7 @@ var doprzodu = 0; //w %
 var dotylu = 0;
 var wlewo = 0;
 var wprawo = 0;
+var opoznienie_przyspieszenia = 0.01;
 
 
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
@@ -67,14 +68,14 @@ io.sockets.on('connection', function (socket)
 			dotylu = 0;
 			if(temp_kierunek > 1) {temp_kierunek = 1;}
 			
-			if(temp_kierunek - doprzodu < 0.05 || doprzodu - temp_kierunek < 0.05)
+			if(temp_kierunek - doprzodu < opoznienie_przyspieszenia || doprzodu - temp_kierunek < opoznienie_przyspieszenia)
 			{
 				doprzodu = temp_kierunek;
 			}
 			else
 			{
-				if(temp_kierunek > doprzodu) { doprzodu = doprzodu + 0.05;}
-				else { doprzodu = doprzodu - 0.05;}
+				if(temp_kierunek > doprzodu) { doprzodu = doprzodu + opoznienie_przyspieszenia;}
+				else { doprzodu = doprzodu - opoznienie_przyspieszenia;}
 			}
 		}
 		else
@@ -83,14 +84,14 @@ io.sockets.on('connection', function (socket)
 			doprzodu = 0;
 			if(temp_kierunek > 1) {temp_kierunek = 1;}
 			
-			if(temp_kierunek - dotylu < 0.05 || dotylu - temp_kierunek < 0.05)
+			if(temp_kierunek - dotylu < opoznienie_przyspieszenia || dotylu - temp_kierunek < opoznienie_przyspieszenia)
 			{
 				dotylu = temp_kierunek;
 			}
 			else
 			{
-				if(temp_kierunek > dotylu) { doprzodu = dotylu + 0.05;}
-				else { dotylu = dotylu - 0.05;}
+				if(temp_kierunek > dotylu) { doprzodu = dotylu + opoznienie_przyspieszenia;}
+				else { dotylu = dotylu - opoznienie_przyspieszenia;}
 			}
 		}
 		
@@ -101,7 +102,7 @@ io.sockets.on('connection', function (socket)
 		
 		// dont let char echos slow dn the app; we are running at 20Hz
 		// dont le the console limit this due to slow echoing of chars
-		if(logcount == 1)
+		if(logcount == 10)
 		{
 			//@ 2 Hz
 			logcount = 0;
