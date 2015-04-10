@@ -64,6 +64,7 @@ io.sockets.on('connection', function (socket)
 		
 		if(temp_kierunek >= 0)
 		{
+			dotylu = 0;
 			if(temp_kierunek > 1) {temp_kierunek = 1;}
 			
 			if(temp_kierunek - doprzodu < 0.05 || doprzodu - temp_kierunek < 0.05)
@@ -74,6 +75,22 @@ io.sockets.on('connection', function (socket)
 			{
 				if(temp_kierunek > doprzodu) { doprzodu = doprzodu + 0.05;}
 				else { doprzodu = doprzodu - 0.05;}
+			}
+		}
+		else
+		{
+			temp_kierunek = abs(temp_kierunek);
+			doprzodu = 0;
+			if(temp_kierunek > 1) {temp_kierunek = 1;}
+			
+			if(temp_kierunek - dotylu < 0.05 || dotylu - temp_kierunek < 0.05)
+			{
+				dotylu = temp_kierunek;
+			}
+			else
+			{
+				if(temp_kierunek > dotylu) { doprzodu = dotylu + 0.05;}
+				else { dotylu = dotylu - 0.05;}
 			}
 		}
 		
@@ -89,7 +106,7 @@ io.sockets.on('connection', function (socket)
 			//@ 2 Hz
 			logcount = 0;
 			console.log("Beta: "+data.beta+" Gamma: "+data.gamma);
-			console.log("Przod: "+doprzodu+"%  Tyl: "+dotylu+"%  Lewo: "+wlewo+"%  Prawo: "+wprawo);
+			console.log("Przod: "+doprzodu*100+"%  Tyl: "+dotylu*100+"%  Lewo: "+wlewo*100+"%  Prawo: "+wprawo*100);
 		}
 		
 		//control car using clever pwm gpio library
