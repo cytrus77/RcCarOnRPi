@@ -25,8 +25,7 @@ var pin_wlewo = 22;
 var pin_wprawo = 23;
 var smoothed_throttle = 0;
 var logcount = 0;
-var old_gamma = 0;
-var old_beta = 0;
+
 
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
 
@@ -68,10 +67,10 @@ io.sockets.on('connection', function (socket)
 		}
 		
 		//control car using clever pwm gpio library
-		piblaster.setPwm(pin_przod, smoothed_throttle); //throttle using soft pwm
-		piblaster.setPwm(pin_wsteczny, data.beta); //throttle using soft pwm
-		piblaster.setPwm(pin_wlewo, data.beta); //throttle using soft pwm
-		piblaster.setPwm(pin_wprawo, data.beta); //throttle using soft pwm
+	//	piblaster.setPwm(pin_przod, smoothed_throttle); //throttle using soft pwm
+	//	piblaster.setPwm(pin_wsteczny, data.beta); //throttle using soft pwm
+	//	piblaster.setPwm(pin_wlewo, data.beta); //throttle using soft pwm
+	//	piblaster.setPwm(pin_wprawo, data.beta); //throttle using soft pwm
 		
 		clearInterval(lastAction); //stop emergency stop timer
 		lastAction = setInterval(emergencyStop,2000); //set emergency stop timer for 1 second
