@@ -28,7 +28,7 @@ var doprzodu = 0; //w %
 var dotylu = 0;
 var wlewo = 0;
 var wprawo = 0;
-var opoznienie_przyspieszenia = 0.01;
+var opoznienie_przyspieszenia = 0.02;
 
 
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
@@ -90,7 +90,7 @@ io.sockets.on('connection', function (socket)
 			}
 			else
 			{
-				if(temp_kierunek > dotylu) { doprzodu = dotylu + opoznienie_przyspieszenia;}
+				if(temp_kierunek > dotylu) { dotylu = dotylu + opoznienie_przyspieszenia;}
 				else { dotylu = dotylu - opoznienie_przyspieszenia;}
 			}
 		}
