@@ -68,7 +68,7 @@ io.sockets.on('connection', function (socket)
 			dotylu = 0;
 			if(temp_kierunek > 1) {temp_kierunek = 1;}
 			
-			if(temp_kierunek - doprzodu < opoznienie_przyspieszenia || doprzodu - temp_kierunek < opoznienie_przyspieszenia)
+			if( Math.abs(temp_kierunek - doprzodu) < opoznienie_przyspieszenia)
 			{
 				doprzodu = temp_kierunek;
 			}
@@ -84,7 +84,7 @@ io.sockets.on('connection', function (socket)
 			doprzodu = 0;
 			if(temp_kierunek > 1) {temp_kierunek = 1;}
 			
-			if(temp_kierunek - dotylu < opoznienie_przyspieszenia || dotylu - temp_kierunek < opoznienie_przyspieszenia)
+			if( Math.abs(temp_kierunek - dotylu) < opoznienie_przyspieszenia)
 			{
 				dotylu = temp_kierunek;
 			}
