@@ -1,6 +1,6 @@
 #picar
 
-![](https://github.com/lawsonkeith/Pi-Rc-Car/raw/master/media/DSC_0216.jpg)
+![](link_do_foty)
 
 ##Overview
 Use your raspberry pi to control a 1/10 scale RC car via a web page hosted wirelessly on your PI.  All you need to do is set up your PI to use your mobile as a hotspot then log onto it's hosted web page and tilt your phone to control your car like a Wii Remote.  I've used an old Tamiya hornet in this example; any car will do but if you are buying one try and get one with enough space under the bodyshell to fit all your electronics.
