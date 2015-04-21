@@ -19,25 +19,19 @@ function handler(request, response)
   file.serve(request, response);
 };
 
-var pin_przyspieszenie = 17;
-var pin_skretu = 18;
-var pin_przod = 27;
-var pin_wsteczny = 22;
-var pin_wlewo = 23;
-var pin_wprawo = 24;
+var pin_przod = 17;
+var pin_wsteczny = 18;
+var pin_wlewo = 22;
+var pin_wprawo = 23;
 var logcount = 0;
-var przyspieszenie = 0; //w %
-var skret = 0;
+var doprzodu = 0; //w %
+var dotylu = 0;
+var wlewo = 0;
+var wprawo = 0;
 var opoznienie_przyspieszenia = 0.02;
 var opoznienie_skrecania = 0.10;
 
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
-
-//set all pins as output
-//gpio.setup(pin_przod, gpio.DIR_OUT, write);
-//gpio.setup(pin_wsteczny, gpio.DIR_OUT, write);
-//gpio.setup(pin_wlewo, gpio.DIR_OUT, write);
-//gpio.setup(pin_wprawo, gpio.DIR_OUT, write);
 
 lastAction = "";
 
@@ -46,12 +40,10 @@ lastAction = "";
 function emergencyStop()
 {
 	//enter 0 point here specific to your pwm control
-  	piblaster.setPwm(pin_przyspieszenie, 0);
- 	piblaster.setPwm(pin_skretu, 0);
- //	gpio.write(pin_przod, false);
- //	gpio.write(pin_wsteczny, false);
- //	gpio.write(pin_wlewo, false);
- //	gpio.write(pin_wprawo, false);
+  	piblaster.setPwm(pin_przod, 0);
+ 	piblaster.setPwm(pin_wsteczny, 0);
+ 	piblaster.setPwm(pin_wlewo, 0);
+ 	piblaster.setPwm(pin_wprawo, 0);
  	
   	console.log('###EMERGENCY STOP - signal lost or shutting down');
 }//END emergencyStop
@@ -76,52 +68,69 @@ io.sockets.on('connection', function (socket)
 		
 		if(temp_kierunek >= 0)
 		{
-	//	 	gpio.write(pin_przod, true);
- 	//		gpio.write(pin_wsteczny, false);
+			dotylu = 0;
+			if(temp_kierunek > 1) {temp_kierunek = 1;}
+			
+			if( Math.abs(temp_kierunek - doprzodu) < opoznienie_przyspieszenia)
+			{
+				doprzodu = temp_kierunek;
+			}
+			else
+			{
+				if(temp_kierunek > doprzodu) { doprzodu = doprzodu + opoznienie_przyspieszenia;}
+				else { doprzodu = doprzodu - opoznienie_przyspieszenia;}
+			}
 		}
-		else 
+		else
 		{
-	//	 	gpio.write(pin_przod, false);
- 	//		gpio.write(pin_wsteczny, true);
- 			temp_kierunek = Math.abs(temp_kierunek);
+			temp_kierunek = Math.abs(temp_kierunek);
+			doprzodu = 0;
+			if(temp_kierunek > 1) {temp_kierunek = 1;}
+			
+			if( Math.abs(temp_kierunek - dotylu) < opoznienie_przyspieszenia)
+			{
+				dotylu = temp_kierunek;
+			}
+			else
+			{
+				if(temp_kierunek > dotylu) { dotylu = dotylu + opoznienie_przyspieszenia;}
+				else { dotylu = dotylu - opoznienie_przyspieszenia;}
+			}
 		}
 		
-		if(temp_kierunek > 1) {temp_kierunek = 1;}
-			
-		if( Math.abs(temp_kierunek - przyspieszenie) < opoznienie_przyspieszenia)
-		{
-			przyspieszenie = temp_kierunek;
-		}
-		else
-		{
-			if(temp_kierunek > przyspieszenie) { przyspieszenie = przyspieszenie + opoznienie_przyspieszenia;}
-			else { przyspieszenie = przyspieszenie - opoznienie_przyspieszenia;}
-		}
-	
-	
 		if(temp_skret >= 0)
 		{
-//			gpio.write(pin_wlewo, true);
- //			gpio.write(pin_wprawo, false);
+			wlewo = 0;
+			if(temp_skret > 1) {temp_skret = 1;}
+			
+			if( Math.abs(temp_skret - wprawo) < opoznienie_skrecania)
+			{
+				wprawo = temp_skret;
+			}
+			else
+			{
+				if(temp_skret > wprawo) { wprawo = wprawo + opoznienie_skrecania;}
+				else { wprawo = wprawo - opoznienie_skrecania;}
+			}
 		}
 		else
 		{
-//			gpio.write(pin_wlewo, false);
- //			gpio.write(pin_wprawo, true);
- 			Math.abs(temp_skret);
-		}
+			temp_skret = Math.abs(temp_skret);
+			wprawo = 0;
+			if(temp_skret > 1) {temp_skret = 1;}
 			
-		if(temp_skret > 1) {temp_skret = 1;}
-			
-		if( Math.abs(temp_skret - skret) < opoznienie_skrecania)
-		{
-			skret = temp_skret;
+			if( Math.abs(temp_skret - wlewo) < opoznienie_skrecania)
+			{
+				wlewo = temp_skret;
+			}
+			else
+			{
+				if(temp_skret > wlewo) { wlewo = wlewo + opoznienie_skrecania;}
+				else { wlewo = wlewo - opoznienie_skrecania;}
+			}
 		}
-		else
-		{
-			if(temp_skret > skret) { skret = skret + opoznienie_skrecania;}
-			else { skret = skret - opoznienie_skrecania;}
-		}
+		
+		
 		
 		// dont let char echos slow dn the app; we are running at 20Hz
 		// dont le the console limit this due to slow echoing of chars
@@ -130,13 +139,31 @@ io.sockets.on('connection', function (socket)
 			//@ 2 Hz
 			logcount = 0;
 			console.log("Beta: "+data.beta+" Gamma: "+data.gamma);
-			console.log("Przyspieszenie: "+Math.round(przyspieszenie*100)+"%  Skret: "+Math.round(skret*100)+"%");
+			console.log("Przod: "+Math.round(doprzodu*100)+"%  Tyl: "+Math.round(dotylu*100)+"%  Lewo: "+Math.round(wlewo*100)+"%  Prawo: "+Math.round(wprawo*100));
 		}
 		
 		//control car using clever pwm gpio library
-		piblaster.setPwm(pin_przyspieszenie, przyspieszenie); //throttle using soft pwm
-		piblaster.setPwm(pin_skretu, skret); //throttle using soft pwm
-	
+		if(doprzodu > 0)
+		{
+			piblaster.setPwm(pin_przod, doprzodu); //throttle using soft pwm
+			piblaster.setPwm(pin_wsteczny, 0); //throttle using soft pwm
+		}
+		else
+		{
+			piblaster.setPwm(pin_przod, 0); //throttle using soft pwm
+			piblaster.setPwm(pin_wsteczny, dotylu); //throttle using soft pwm
+		}
+		
+		if(wlewo > 0)
+		{
+			piblaster.setPwm(pin_wlewo, wlewo); //throttle using soft pwm
+			piblaster.setPwm(pin_wprawo, 0); //throttle using soft pwm
+		}
+		else
+		{
+			piblaster.setPwm(pin_wlewo, 0); //throttle using soft pwm
+			piblaster.setPwm(pin_wprawo, wprawo); //throttle using soft pwm
+		}
 		
 		clearInterval(lastAction); //stop emergency stop timer
 		lastAction = setInterval(emergencyStop,2000); //set emergency stop timer for 1 second
