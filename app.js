@@ -130,12 +130,12 @@ io.sockets.on('connection', function (socket)
 			//@ 2 Hz
 			logcount = 0;
 			console.log("Beta: "+data.beta+" Gamma: "+data.gamma);
-			console.log("Przyspieszenie: "+Math.round(przyspiesznie*100)+"%  Skret: "+Math.round(skret*100)+"%");
+			console.log("Przyspieszenie: "+Math.round(przyspieszenie*100)+"%  Skret: "+Math.round(skret*100)+"%");
 		}
 		
 		//control car using clever pwm gpio library
 		piblaster.setPwm(pin_przyspieszenie, przyspieszenie); //throttle using soft pwm
-		piblaster.setPwm(pin_skret, skret); //throttle using soft pwm
+		piblaster.setPwm(pin_skretu, skret); //throttle using soft pwm
 	
 		
 		clearInterval(lastAction); //stop emergency stop timer
