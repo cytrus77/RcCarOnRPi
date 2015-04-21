@@ -35,11 +35,15 @@ var opoznienie_skrecania = 0.10;
 
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8090/socket.html');
 
+function pyklo() {
+	console.log("Cos pyklo");
+}
+
 //set all pins as output
-//gpio.setup(pin_przod, gpio.DIR_OUT);//, write);
-//gpio.setup(pin_wsteczny, gpio.DIR_OUT);//, write);
-//gpio.setup(pin_wlewo, gpio.DIR_OUT);//, write);
-//gpio.setup(pin_wprawo, gpio.DIR_OUT);//, write);
+gpio.setup(pin_przod, gpio.DIR_OUT,pyklo);//, write);
+gpio.setup(pin_wsteczny, gpio.DIR_OUT,pyklo);//, write);
+gpio.setup(pin_wlewo, gpio.DIR_OUT,pyklo);//, write);
+gpio.setup(pin_wprawo, gpio.DIR_OUT,pyklo);//, write);
 
 lastAction = "";
 
