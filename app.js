@@ -135,6 +135,8 @@ io.sockets.on('connection', function (socket)
 			console.log("Przyspieszenie: "+Math.round(przyspieszenie*100)+"%  Skret: "+Math.round(skret*100)+"%");
 		}
 		
+		logcount++;
+		
 		//control car using clever pwm gpio library
 		piblaster.setPwm(pin_przyspieszenie, przyspieszenie); //throttle using soft pwm
 		piblaster.setPwm(pin_skretu, skret); //throttle using soft pwm
