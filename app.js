@@ -7,7 +7,7 @@ var app = require('http').createServer(handler)
   , piblaster = require('pi-blaster.js')
   , sleep = require('sleep')
   , argv = require('optimist').argv;
-  app.listen(8080);
+  app.listen(8090);
 
 
 //Make a web server on port 8080
