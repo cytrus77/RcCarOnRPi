@@ -34,10 +34,10 @@ var opoznienie_skrecania = 0.10;
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
 
 //set all pins as output
-gpio.setup(pin_przod, gpio.DIR_OUT, write);
-gpio.setup(pin_wsteczny, gpio.DIR_OUT, write);
-gpio.setup(pin_wlewo, gpio.DIR_OUT, write);
-gpio.setup(pin_wprawo, gpio.DIR_OUT, write);
+//gpio.setup(pin_przod, gpio.DIR_OUT, write);
+//gpio.setup(pin_wsteczny, gpio.DIR_OUT, write);
+//gpio.setup(pin_wlewo, gpio.DIR_OUT, write);
+//gpio.setup(pin_wprawo, gpio.DIR_OUT, write);
 
 lastAction = "";
 
@@ -48,10 +48,10 @@ function emergencyStop()
 	//enter 0 point here specific to your pwm control
   	piblaster.setPwm(pin_przyspieszenie, 0);
  	piblaster.setPwm(pin_skretu, 0);
- 	gpio.write(pin_przod, false);
- 	gpio.write(pin_wsteczny, false);
- 	gpio.write(pin_wlewo, false);
- 	gpio.write(pin_wprawo, false);
+ //	gpio.write(pin_przod, false);
+ //	gpio.write(pin_wsteczny, false);
+ //	gpio.write(pin_wlewo, false);
+ //	gpio.write(pin_wprawo, false);
  	
   	console.log('###EMERGENCY STOP - signal lost or shutting down');
 }//END emergencyStop
@@ -76,13 +76,13 @@ io.sockets.on('connection', function (socket)
 		
 		if(temp_kierunek >= 0)
 		{
-		 	gpio.write(pin_przod, true);
- 			gpio.write(pin_wsteczny, false);
+	//	 	gpio.write(pin_przod, true);
+ 	//		gpio.write(pin_wsteczny, false);
 		}
 		else 
 		{
-		 	gpio.write(pin_przod, false);
- 			gpio.write(pin_wsteczny, true);
+	//	 	gpio.write(pin_przod, false);
+ 	//		gpio.write(pin_wsteczny, true);
  			temp_kierunek = Math.abs(temp_kierunek);
 		}
 		
@@ -101,13 +101,13 @@ io.sockets.on('connection', function (socket)
 	
 		if(temp_skret >= 0)
 		{
-			gpio.write(pin_wlewo, true);
- 			gpio.write(pin_wprawo, false);
+//			gpio.write(pin_wlewo, true);
+ //			gpio.write(pin_wprawo, false);
 		}
 		else
 		{
-			gpio.write(pin_wlewo, false);
- 			gpio.write(pin_wprawo, true);
+//			gpio.write(pin_wlewo, false);
+ //			gpio.write(pin_wprawo, true);
  			Math.abs(temp_skret);
 		}
 			
