@@ -19,6 +19,8 @@ function handler(request, response)
   file.serve(request, response);
 };
 
+var gpio = require('rpi-gpio');
+
 var pin_przyspieszenie = 17;
 var pin_skretu = 18;
 var pin_przod = 27;
