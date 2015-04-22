@@ -5,12 +5,13 @@ var app = require('http').createServer(handler)
   , static = require('node-static')
   , sys = require('sys')
   , piblaster = require('pi-blaster.js')
+  , gpio = require('rpi-gpio')
   , sleep = require('sleep')
   , argv = require('optimist').argv;
   app.listen(8080);
 
 
-//Make a web server on port 8090
+//Make a web server on port 8080
 //
 var file = new(static.Server)();
 function handler(request, response) 
@@ -19,7 +20,6 @@ function handler(request, response)
   file.serve(request, response);
 };
 
-var gpio = require('rpi-gpio');
 
 var pin_przyspieszenie = 17;
 var pin_skretu = 18;
@@ -33,24 +33,32 @@ var skret = 0;
 var opoznienie_przyspieszenia = 0.02;
 var opoznienie_skrecania = 0.10;
 
-console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8090/socket.html');
+console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
 
 function pyklo() {
-	console.log("Cos pyklo");
+	console.log("Config pinow OK");
 }
 
+gpio.setMode(MODE_BCM);
 //set all pins as output
 gpio.setup(pin_przod, gpio.DIR_OUT,pyklo);//, write);
 gpio.setup(pin_wsteczny, gpio.DIR_OUT,pyklo);//, write);
 gpio.setup(pin_wlewo, gpio.DIR_OUT,pyklo);//, write);
 gpio.setup(pin_wprawo, gpio.DIR_OUT,pyklo);//, write);
 
-function bledix(err) {
-        if (err) throw err;
-        console.log('Written to pin');
-    }
-
 lastAction = "";
+
+//function for controlling GPIO using rpi-gpio module
+function setPin ()
+{
+	gpio.setup(pinNo, gpio.DIR_OUT, function() {
+	    gpio.write(pinNo, pinSw, function(err) {
+        	if (err) throw err;
+	 	console.log('Written to pin');
+	    });
+	});
+}
+
 
 //If we lose comms set the servos to neutral
 //
@@ -59,11 +67,16 @@ function emergencyStop()
 	//enter 0 point here specific to your pwm control
   	piblaster.setPwm(pin_przyspieszenie, 0);
  	piblaster.setPwm(pin_skretu, 0);
- 	gpio.write(pin_przod, false,bledix(err));
- 	gpio.write(pin_wsteczny, false,bledix(err));
- 	gpio.write(pin_wlewo, false),bledix(err);
- 	gpio.write(pin_wprawo, false,bledix(err));
- 	
+ 	pinSw = false;
+ 	pinNo = pin_przod;
+ 	setPin();
+ 	pinNo = pin_wsteczny;
+ 	setPin();
+ 	pinNo = pin_wlewo;
+ 	setPin();
+ 	pinNo = pin_wprawo;
+ 	setPin();
+
   	console.log('###EMERGENCY STOP - signal lost or shutting down');
 }//END emergencyStop
 
@@ -87,13 +100,21 @@ io.sockets.on('connection', function (socket)
 		
 		if(temp_kierunek >= 0)
 		{
-		 	gpio.write(pin_przod, true,bledix(err));
- 			gpio.write(pin_wsteczny, false,bledix(err));
+		 	pinSw = true;
+		 	pinNo = pin_przod;
+		 	setPin();
+		 	pinSw = false;
+		 	pinNo = pin_wsteczny;
+		 	setPin();
 		}
 		else 
 		{
-		 	gpio.write(pin_przod, false,bledix(err));
- 			gpio.write(pin_wsteczny, true,bledix(err));
+		 	pinSw = false;
+		 	pinNo = pin_przod;
+		 	setPin();
+		 	pinSw = true;
+		 	pinNo = pin_wsteczny;
+		 	setPin();
  			temp_kierunek = Math.abs(temp_kierunek);
 		}
 		
@@ -112,13 +133,21 @@ io.sockets.on('connection', function (socket)
 	
 		if(temp_skret >= 0)
 		{
-			gpio.write(pin_wlewo, true,bledix(err));
- 			gpio.write(pin_wprawo, false,bledix(err));
+		 	pinSw = true;
+		 	pinNo = pin_wlewo;
+		 	setPin();
+		 	pinSw = false;
+		 	pinNo = pin_wprawo;
+		 	setPin();
 		}
 		else
 		{
-			gpio.write(pin_wlewo, false,bledix(err));
- 			gpio.write(pin_wprawo, true,bledix(err));
+		 	pinSw = false;
+		 	pinNo = pin_wlewo;
+		 	setPin();
+		 	pinSw = true;
+		 	pinNo = pin_wprawo;
+		 	setPin();
  			Math.abs(temp_skret);
 		}
 			
