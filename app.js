@@ -112,13 +112,13 @@ io.sockets.on('connection', function (socket)
 	
 		if(temp_skret >= 0)
 		{
-			gpio.write(pin_wlewo, true,function(err));
- 			gpio.write(pin_wprawo, false,function(err));
+			gpio.write(pin_wlewo, true,bledix(err));
+ 			gpio.write(pin_wprawo, false,bledix(err));
 		}
 		else
 		{
-			gpio.write(pin_wlewo, false,function(err));
- 			gpio.write(pin_wprawo, true,function(err));
+			gpio.write(pin_wlewo, false,bledix(err));
+ 			gpio.write(pin_wprawo, true,bledix(err));
  			Math.abs(temp_skret);
 		}
 			
