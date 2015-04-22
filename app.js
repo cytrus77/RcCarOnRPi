@@ -48,7 +48,7 @@ var kierunek_skretu = 0; // 0 - lewo ; 1 - prosto; 2 - prawo
 var aktualny_skret = 0;
 var opoznienie_przyspieszenia = 0.02;
 var opoznienie_skrecania = 0.25;
-var bezpiecznik_skretu = 0;
+var bezpiecznik = 0;
 
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
 
@@ -56,12 +56,12 @@ lastAction = "";
 
 function bezpiecznik_skretu()
 {
-	bezpiecznik_skretu++;
-	if(bezpiecznik_skretu > 10)
+	bezpiecznik++;
+	if(bezpiecznik > 10)
 	{
 		if(aktualny_skret == 0) {aktualny_skret = 2;}
 		else if(aktualny_skret == 2) {aktualny_skret = 0;}
-		bezpiecznik_skretu = 0;
+		bezpiecznik = 0;
 	}
 }
 
