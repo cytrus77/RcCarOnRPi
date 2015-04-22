@@ -45,7 +45,7 @@ gpio.setup(pin_wsteczny, gpio.DIR_OUT,pyklo);//, write);
 gpio.setup(pin_wlewo, gpio.DIR_OUT,pyklo);//, write);
 gpio.setup(pin_wprawo, gpio.DIR_OUT,pyklo);//, write);
 
-function(err) {
+function function(err) {
         if (err) throw err;
         console.log('Written to pin');
     }
