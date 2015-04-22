@@ -130,7 +130,7 @@ io.sockets.on('connection', function (socket)
 		}
 		
 		logcount++;
-		
+		console.log("Logcount: "+logcount);
 		//control car using clever pwm gpio library
 		piblaster.setPwm(pin_przyspieszenie, przyspieszenie); //throttle using soft pwm
 		piblaster.setPwm(pin_skretu, skret); //throttle using soft pwm
