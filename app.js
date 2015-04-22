@@ -87,6 +87,16 @@ io.sockets.on('connection', function (socket)
 		
 		temp_kierunek = data.gamma / 45;
 		temp_skret = data.beta / 45;
+		obiekt_zolty.watch(function(err, value) {
+			 zolty = value;
+			});
+		obiekt_zielony.watch(function(err, value) {
+			 zielony = value;
+			});
+		obiekt_niebieski.watch(function(err, value) {
+			 niebieski = value;
+			});
+		console.log("Zolty "+zolty+" Zielony: "+zielony + " Niebieski: "+niebieski);
 		
 		if(temp_kierunek >= 0)
 		{
