@@ -133,8 +133,8 @@ io.sockets.on('connection', function (socket)
 		}
 	
 	
-		if(temp_skret > 0) {kierunek_skretu = 2;}
-		else if(temp_skret == 0) {kierunek_skretu = 1;}
+		if(Math.abs(temp_skret) < 0.1) {kierunek_skretu = 1;}
+		else if(temp_skret > 0) {kierunek_skretu = 2;}
 		else if(temp_skret < 0) {kierunek_skretu = 0;}
 		temp_skret = Math.abs(temp_skret);
 		if(temp_skret < 0.1) temp_skret = 0;	
@@ -203,7 +203,7 @@ io.sockets.on('connection', function (socket)
 		{
 			//@ 2 Hz
 			logcount = 0;
-			console.log("aktualny_skret "+aktualny_skret);
+			console.log("aktualny_skret "+aktualny_skret + "kierunek_skretu"+kierunek_skretu);
 			console.log("Zolty "+zolty+" Zielony: "+zielony + " Niebieski: "+niebieski);
 			console.log("Beta: "+data.beta+" Gamma: "+data.gamma);
 			console.log("Przyspieszenie: "+Math.round(przyspieszenie*100)+"%  Skret: "+Math.round(skret*100)+"%");
