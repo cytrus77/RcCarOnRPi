@@ -44,8 +44,7 @@ var niebieski = 1;
 var logcount = 0;
 var przyspieszenie = 0; //w %
 var skret = 0;
-var kat_skretu = 0;
-var kierunek_skretu = 0; // 0 - lewo ; 1 - prawo
+var kierunek_skretu = 0; // 0 - lewo ; 1 - prosto; 2 - prawo
 var aktualny_skret = 0;
 var opoznienie_przyspieszenia = 0.02;
 var opoznienie_skrecania = 0.25;
@@ -55,6 +54,16 @@ console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080
 
 lastAction = "";
 
+function bezpiecznik_skretu()
+{
+	bezpiecznik_skretu++;
+	if(bezpiecznik_skretu > 10)
+	{
+		if(aktualny_skret == 0) {aktualny_skret = 2;}
+		else if(aktualny_skret == 2) {aktualny_skret = 0;}
+		bezpiecznik_skretu = 0;
+	}
+}
 
 //If we lose comms set the servos to neutral
 //
@@ -125,82 +134,70 @@ io.sockets.on('connection', function (socket)
 		}
 	
 	
-		if(temp_skret > 0) {kierunek_skretu = 1;}
-		else {kierunek_skretu = 0;}
+		if(temp_skret > 0) {kierunek_skretu = 2;}
+		else if(temp_skret == 0) {kierunek_skretu = 1;}
+		else if(temp_skret < 0) {kierunek_skretu = 0;}
 		temp_skret = Math.abs(temp_skret);
 		if(temp_skret < 0.1) temp_skret = 0;	
 		if(temp_skret > 1) {temp_skret = 1;}
 		
-		if(temp_skret == 0)
-		{
-			if(zolty == 1) //kola sa juz prosto
-			{
-		 		piblaster.setPwm(pin_wlewo, 0);	
-				piblaster.setPwm(pin_wprawo, 0);
-			}
-			if(aktualny_skret == 1 && zolty == 0) // kola sa skrecone w prawo
-			{
+		if(niebieski == 1 && zielony == 0) {aktualny_skret = 0;}
+		else if(niebieski == 0 && zielony == 1) {aktualny_skret = 2;}
+		else if(zolty == 1) {aktualny_skret = 1;}
+		
+		switch(kierunek_skretu){
+			case 0:
 				piblaster.setPwm(pin_wlewo, 1);	
 				piblaster.setPwm(pin_wprawo, 0);
-				piblaster.setPwm(pin_skretu, 0.25); //throttle using soft pwm
-				bezpiecznik_skretu++;
-				if(bezpiecznik_skretu > 10)
+				if(niebieski == 1 && zielony == 1 && aktualny_skret == 0)
 				{
-					aktualny_skret = 0;
-					bezpiecznik_skretu = 0;
+					piblaster.setPwm(pin_wlewo, 0);	
+					temp_skret = 0;
+					bezpiecznik_skretu();
 				}
-			}
-			if(aktualny_skret == 0 && zolty == 0) // kola sa skrecone w lewo
-			{
+				break;
+			case 1:
+				if(aktualny_skret == 1) //kola sa juz prosto
+				{
+		 			piblaster.setPwm(pin_wlewo, 0);	
+					piblaster.setPwm(pin_wprawo, 0);
+					temp_skret = 0;
+				}
+				else if(aktualny_skret == 2 ) // kola sa skrecone w prawo
+				{
+					piblaster.setPwm(pin_wlewo, 1);	
+					piblaster.setPwm(pin_wprawo, 0);
+					piblaster.setPwm(pin_skretu, 0.2); //throttle using soft pwm
+					bezpiecznik_skretu();
+				}
+				else if(aktualny_skret == 0) // kola sa skrecone w lewo
+				{
+					piblaster.setPwm(pin_wlewo, 0);	
+					piblaster.setPwm(pin_wprawo, 1);
+					piblaster.setPwm(pin_skretu, 0.2); //throttle using soft pwm
+					bezpiecznik_skretu();
+				}
+				break;
+			case 2:
 				piblaster.setPwm(pin_wlewo, 0);	
 				piblaster.setPwm(pin_wprawo, 1);
-				piblaster.setPwm(pin_skretu, 0.25); //throttle using soft pwm
-				bezpiecznik_skretu++;
-				if(bezpiecznik_skretu > 10)
+				if(niebieski == 1 && zielony == 1 && aktualny_skret == 2)
 				{
-					aktualny_skret = 1;
-					bezpiecznik_skretu = 0;
+					piblaster.setPwm(pin_wprawo, 0);
+					temp_skret = 0;
+					bezpiecznik_skretu();
 				}
-			}
-		}
-		if(kierunek_skretu == 0 && temp_skret > 0)
-		{
-			piblaster.setPwm(pin_wlewo, 1);	
-			piblaster.setPwm(pin_wprawo, 0);
-			if(niebieski == 1 && zielony == 1 && aktualny_skret == 0)
-			{
+				break;
+			default:
 				piblaster.setPwm(pin_wlewo, 0);	
-				temp_skret = 0;
-			}
-		}
-		if(kierunek_skretu == 1 && temp_skret > 0)
-		{
-			piblaster.setPwm(pin_wlewo, 0);	
-			piblaster.setPwm(pin_wprawo, 1);
-			if(niebieski == 1 && zielony == 1 && aktualny_skret == 1)
-			{
 				piblaster.setPwm(pin_wprawo, 0);
 				temp_skret = 0;
-			}
+				break;
 		}
-		if(niebieski == 1 && zielony == 0) {aktualny_skret = 0;}
-		if(niebieski == 0 && zielony == 1) {aktualny_skret = 1;}
-		
-		console.log("aktualny_skret "+aktualny_skret);
 		
 		skret = temp_skret;
-
-	/*		
-		if( Math.abs(temp_skret - skret) < opoznienie_skrecania)
-		{
-			skret = temp_skret;
-		}
-		else
-		{
-			if(temp_skret > skret) { skret = skret + opoznienie_skrecania;}
-			else { skret = skret - opoznienie_skrecania;}
-		}
-	*/	
+		
+		
 		// dont let char echos slow dn the app; we are running at 20Hz
 		// dont le the console limit this due to slow echoing of chars
 		if(logcount > 25)
@@ -213,7 +210,7 @@ io.sockets.on('connection', function (socket)
 
 		//control car using clever pwm gpio library
 		piblaster.setPwm(pin_przyspieszenie, przyspieszenie); //throttle using soft pwm
-		if(temp_skret > 0) {piblaster.setPwm(pin_skretu, skret);} //throttle using soft pwm
+		piblaster.setPwm(pin_skretu, skret); //throttle using soft pwm
 		
 		clearInterval(lastAction); //stop emergency stop timer
 		lastAction = setInterval(emergencyStop,2000); //set emergency stop timer for 1 second
