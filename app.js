@@ -69,6 +69,7 @@ io.sockets.on('connection', function (socket)
 		
 		temp_kierunek = data.gamma / 45;
 		temp_skret = data.beta / 45;
+		if(Math.abs(temp_kierunek < 0.05)) temp_kierunek = 0;
 		
 		if(temp_kierunek >= 0)
 		{
