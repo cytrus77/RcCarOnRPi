@@ -81,6 +81,7 @@ io.sockets.on('connection', function (socket)
 			piblaster.setPwm(pin_wsteczny, 1);
  			temp_kierunek = Math.abs(temp_kierunek);
 		}
+		
 		if(temp_kierunek < 0.1) temp_kierunek = 0;
 		if(temp_kierunek > 1) {temp_kierunek = 1;}
 			
@@ -104,7 +105,7 @@ io.sockets.on('connection', function (socket)
 		{
 		 	piblaster.setPwm(pin_wlewo, 0);	
 			piblaster.setPwm(pin_wprawo, 1);
- 			Math.abs(temp_skret);
+ 			temp_skret = Math.abs(temp_skret);
 		}
 		
 		if(temp_skret < 0.1) temp_skret = 0;	
