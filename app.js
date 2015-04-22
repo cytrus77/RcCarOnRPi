@@ -49,6 +49,7 @@ var kierunek_skretu = 0; // 0 - lewo ; 1 - prawo
 var aktualny_skret = 0;
 var opoznienie_przyspieszenia = 0.02;
 var opoznienie_skrecania = 0.25;
+var bezpiecznik_skretu = 0;
 
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
 
@@ -110,7 +111,7 @@ io.sockets.on('connection', function (socket)
  			temp_kierunek = Math.abs(temp_kierunek);
 		}
 		
-		if(temp_kierunek < 0.1) temp_kierunek = 0;
+		if(temp_kierunek < 0.15) temp_kierunek = 0;
 		if(temp_kierunek > 1) {temp_kierunek = 1;}
 			
 		if( Math.abs(temp_kierunek - przyspieszenie) < opoznienie_przyspieszenia)
@@ -142,12 +143,24 @@ io.sockets.on('connection', function (socket)
 				piblaster.setPwm(pin_wlewo, 1);	
 				piblaster.setPwm(pin_wprawo, 0);
 				piblaster.setPwm(pin_skretu, 0.1); //throttle using soft pwm
+				bezpiecznik_skretu++;
+				if(bezpiecznik_skretu > 10)
+				{
+					aktualny_skret = 0;
+					bezpiecznik_skretu = 0;
+				}
 			}
 			if(aktualny_skret == 0 && zolty == 0) // kola sa skrecone w lewo
 			{
 				piblaster.setPwm(pin_wlewo, 0);	
 				piblaster.setPwm(pin_wprawo, 1);
 				piblaster.setPwm(pin_skretu, 0.1); //throttle using soft pwm
+				bezpiecznik_skretu++;
+				if(bezpiecznik_skretu > 10)
+				{
+					aktualny_skret = 1;
+					bezpiecznik_skretu = 0;
+				}
 			}
 		}
 		if(kierunek_skretu == 0 && temp_skret > 0)
