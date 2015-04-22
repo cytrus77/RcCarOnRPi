@@ -23,10 +23,10 @@ function handler(request, response)
 
 var pin_przyspieszenie = 17;
 var pin_skretu = 18;
-var pin_przod = 4;//19;
-var pin_wsteczny = 4;//26;
-var pin_wlewo = 4;//16;
-var pin_wprawo = 4;//20;
+var pin_przod = 7;//19;
+var pin_wsteczny = 7;//26;
+var pin_wlewo = 7;//16;
+var pin_wprawo = 7;//20;
 var logcount = 0;
 var przyspieszenie = 0; //w %
 var skret = 0;
@@ -39,7 +39,7 @@ function pyklo() {
 	console.log("Config pinow OK");
 }
 
-gpio.setMode('mode_bcm');
+//gpio.setMode('mode_bcm');
 //set all pins as output
 gpio.setup(pin_przod, gpio.DIR_OUT,pyklo);//, write);
 gpio.setup(pin_wsteczny, gpio.DIR_OUT,pyklo);//, write);
