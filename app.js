@@ -45,7 +45,7 @@ gpio.setup(pin_wsteczny, gpio.DIR_OUT,pyklo);//, write);
 gpio.setup(pin_wlewo, gpio.DIR_OUT,pyklo);//, write);
 gpio.setup(pin_wprawo, gpio.DIR_OUT,pyklo);//, write);
 
-function function(err) {
+function bledix(err) {
         if (err) throw err;
         console.log('Written to pin');
     }
@@ -59,10 +59,10 @@ function emergencyStop()
 	//enter 0 point here specific to your pwm control
   	piblaster.setPwm(pin_przyspieszenie, 0);
  	piblaster.setPwm(pin_skretu, 0);
- 	gpio.write(pin_przod, false,function(err));
- 	gpio.write(pin_wsteczny, false,function(err));
- 	gpio.write(pin_wlewo, false),function(err);
- 	gpio.write(pin_wprawo, false,function(err));
+ 	gpio.write(pin_przod, false,bledix(err));
+ 	gpio.write(pin_wsteczny, false,bledix(err));
+ 	gpio.write(pin_wlewo, false),bledix(err);
+ 	gpio.write(pin_wprawo, false,bledix(err));
  	
   	console.log('###EMERGENCY STOP - signal lost or shutting down');
 }//END emergencyStop
@@ -87,13 +87,13 @@ io.sockets.on('connection', function (socket)
 		
 		if(temp_kierunek >= 0)
 		{
-		 	gpio.write(pin_przod, true,function(err));
- 			gpio.write(pin_wsteczny, false,function(err));
+		 	gpio.write(pin_przod, true,bledix(err));
+ 			gpio.write(pin_wsteczny, false,bledix(err));
 		}
 		else 
 		{
-		 	gpio.write(pin_przod, false,function(err));
- 			gpio.write(pin_wsteczny, true,function(err));
+		 	gpio.write(pin_przod, false,bledix(err));
+ 			gpio.write(pin_wsteczny, true,bledix(err));
  			temp_kierunek = Math.abs(temp_kierunek);
 		}
 		
