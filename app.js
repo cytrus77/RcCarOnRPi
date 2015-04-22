@@ -183,8 +183,11 @@ io.sockets.on('connection', function (socket)
 		}
 		if(niebieski == 1 && zielony == 0) {aktualny_skret = 0;}
 		if(niebieski == 0 && zielony == 1) {aktualny_skret = 1;}
+		
+		
+		skret = temp_skret;
 
-			
+	/*		
 		if( Math.abs(temp_skret - skret) < opoznienie_skrecania)
 		{
 			skret = temp_skret;
@@ -194,7 +197,7 @@ io.sockets.on('connection', function (socket)
 			if(temp_skret > skret) { skret = skret + opoznienie_skrecania;}
 			else { skret = skret - opoznienie_skrecania;}
 		}
-		
+	*/	
 		// dont let char echos slow dn the app; we are running at 20Hz
 		// dont le the console limit this due to slow echoing of chars
 		if(logcount > 25)
