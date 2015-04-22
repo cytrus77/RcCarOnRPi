@@ -5,6 +5,7 @@ var app = require('http').createServer(handler)
   , static = require('node-static')
   , sys = require('sys')
   , piblaster = require('pi-blaster.js')
+  , Gpio = require('onoff').Gpio,
   , sleep = require('sleep')
   , argv = require('optimist').argv;
   app.listen(8080);
@@ -31,6 +32,10 @@ var pin_wprawo = 24;
 var pin_zolty = 16;
 var pin_zielony =20 ;
 var pin_niebieski = 21;
+
+var obiekt_zolty = new Gpio(pin_zolty, 'in');
+var obiekt_zielony = new Gpio(pin_zielony, 'in');
+var obiekt_niebieski = new Gpio(pin_niebieski, 'in');
 
 //zmienne
 var zolty = 0;
