@@ -142,7 +142,7 @@ io.sockets.on('connection', function (socket)
 			{
 				piblaster.setPwm(pin_wlewo, 1);	
 				piblaster.setPwm(pin_wprawo, 0);
-				piblaster.setPwm(pin_skretu, 0.1); //throttle using soft pwm
+				piblaster.setPwm(pin_skretu, 0.25); //throttle using soft pwm
 				bezpiecznik_skretu++;
 				if(bezpiecznik_skretu > 10)
 				{
@@ -154,7 +154,7 @@ io.sockets.on('connection', function (socket)
 			{
 				piblaster.setPwm(pin_wlewo, 0);	
 				piblaster.setPwm(pin_wprawo, 1);
-				piblaster.setPwm(pin_skretu, 0.1); //throttle using soft pwm
+				piblaster.setPwm(pin_skretu, 0.25); //throttle using soft pwm
 				bezpiecznik_skretu++;
 				if(bezpiecznik_skretu > 10)
 				{
@@ -169,6 +169,7 @@ io.sockets.on('connection', function (socket)
 			piblaster.setPwm(pin_wprawo, 0);
 			if(niebieski == 1 && zielony == 1 && aktualny_skret == 0)
 			{
+				piblaster.setPwm(pin_wlewo, 0);	
 				temp_skret = 0;
 			}
 		}
@@ -178,12 +179,14 @@ io.sockets.on('connection', function (socket)
 			piblaster.setPwm(pin_wprawo, 1);
 			if(niebieski == 1 && zielony == 1 && aktualny_skret == 1)
 			{
+				piblaster.setPwm(pin_wprawo, 0);
 				temp_skret = 0;
 			}
 		}
 		if(niebieski == 1 && zielony == 0) {aktualny_skret = 0;}
 		if(niebieski == 0 && zielony == 1) {aktualny_skret = 1;}
 		
+		console.log("aktualny_skret "+aktualny_skret);
 		
 		skret = temp_skret;
 
