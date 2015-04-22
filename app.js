@@ -151,8 +151,8 @@ io.sockets.on('connection', function (socket)
 				skret = 0;
 			}
 		}
-		if(niebieski == 0 && zieolony == 1) {aktualny_skret = 0;}
-		if(niebieski == 1 && zieolony == 0) {aktualny_skret = 1;}
+		if(niebieski == 0 && zielony == 1) {aktualny_skret = 0;}
+		if(niebieski == 1 && zielony == 0) {aktualny_skret = 1;}
 
 			
 		if( Math.abs(temp_skret - skret) < opoznienie_skrecania)
