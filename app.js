@@ -148,7 +148,7 @@ io.sockets.on('connection', function (socket)
 				piblaster.setPwm(pin_wprawo, 1);
 			}
 		}
-		if(kierunek_skretu == 0)
+		if(kierunek_skretu == 0 && temp_skret > 0)
 		{
 			piblaster.setPwm(pin_wlewo, 1);	
 			piblaster.setPwm(pin_wprawo, 0);
@@ -157,7 +157,7 @@ io.sockets.on('connection', function (socket)
 				skret = 0;
 			}
 		}
-		if(kierunek_skretu == 1)
+		if(kierunek_skretu == 1 && temp_skret > 0)
 		{
 			piblaster.setPwm(pin_wlewo, 0);	
 			piblaster.setPwm(pin_wprawo, 1);
