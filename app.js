@@ -207,7 +207,7 @@ io.sockets.on('connection', function (socket)
 
 		//control car using clever pwm gpio library
 		piblaster.setPwm(pin_przyspieszenie, przyspieszenie); //throttle using soft pwm
-		piblaster.setPwm(pin_skretu, skret); //throttle using soft pwm
+		if(temp_skret > 0) {piblaster.setPwm(pin_skretu, skret);} //throttle using soft pwm
 		
 		clearInterval(lastAction); //stop emergency stop timer
 		lastAction = setInterval(emergencyStop,2000); //set emergency stop timer for 1 second
