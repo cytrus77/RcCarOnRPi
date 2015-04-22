@@ -166,14 +166,14 @@ io.sockets.on('connection', function (socket)
 				{
 					piblaster.setPwm(pin_wlewo, 1);	
 					piblaster.setPwm(pin_wprawo, 0);
-					piblaster.setPwm(pin_skretu, 0.2); //throttle using soft pwm
+					temp_skret = 0.2;
 					bezpiecznik_skretu();
 				}
 				else if(aktualny_skret == 0) // kola sa skrecone w lewo
 				{
 					piblaster.setPwm(pin_wlewo, 0);	
 					piblaster.setPwm(pin_wprawo, 1);
-					piblaster.setPwm(pin_skretu, 0.2); //throttle using soft pwm
+					temp_skret = 0.2;
 					bezpiecznik_skretu();
 				}
 				break;
