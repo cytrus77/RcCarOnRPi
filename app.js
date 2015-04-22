@@ -121,7 +121,7 @@ io.sockets.on('connection', function (socket)
 		
 		// dont let char echos slow dn the app; we are running at 20Hz
 		// dont le the console limit this due to slow echoing of chars
-		if(logcount == 10)
+		if(logcount > 10)
 		{
 			//@ 2 Hz
 			logcount = 0;
