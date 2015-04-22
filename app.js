@@ -132,17 +132,17 @@ io.sockets.on('connection', function (socket)
 		
 		if(temp_skret == 0)
 		{
-			if(zolty == 0) //kola sa juz prosto
+			if(zolty == 1) //kola sa juz prosto
 			{
 		 		piblaster.setPwm(pin_wlewo, 0);	
 				piblaster.setPwm(pin_wprawo, 0);
 			}
-			if(aktualny_skret == 1) // kola sa skrecone w prawo
+			if(aktualny_skret == 1 && zolty == 0) // kola sa skrecone w prawo
 			{
 				piblaster.setPwm(pin_wlewo, 1);	
 				piblaster.setPwm(pin_wprawo, 0);
 			}
-			if(aktualny_skret == 0) // kola sa skrecone w lewo
+			if(aktualny_skret == 0 && zolty == 0) // kola sa skrecone w lewo
 			{
 				piblaster.setPwm(pin_wlewo, 0);	
 				piblaster.setPwm(pin_wprawo, 1);
@@ -152,7 +152,7 @@ io.sockets.on('connection', function (socket)
 		{
 			piblaster.setPwm(pin_wlewo, 1);	
 			piblaster.setPwm(pin_wprawo, 0);
-			if(niebieski == 0 && zielony == 0 && aktualny_skret == 0)
+			if(niebieski == 1 && zielony == 1 && aktualny_skret == 0)
 			{
 				skret = 0;
 			}
@@ -161,13 +161,13 @@ io.sockets.on('connection', function (socket)
 		{
 			piblaster.setPwm(pin_wlewo, 0);	
 			piblaster.setPwm(pin_wprawo, 1);
-			if(niebieski == 0 && zielony == 0 && aktualny_skret == 1)
+			if(niebieski == 1 && zielony == 1 && aktualny_skret == 1)
 			{
 				skret = 0;
 			}
 		}
-		if(niebieski == 0 && zielony == 1) {aktualny_skret = 0;}
-		if(niebieski == 1 && zielony == 0) {aktualny_skret = 1;}
+		if(niebieski == 1 && zielony == 0) {aktualny_skret = 0;}
+		if(niebieski == 0 && zielony == 1) {aktualny_skret = 1;}
 
 			
 		if( Math.abs(temp_skret - skret) < opoznienie_skrecania)
