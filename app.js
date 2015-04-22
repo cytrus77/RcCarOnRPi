@@ -5,7 +5,6 @@ var app = require('http').createServer(handler)
   , static = require('node-static')
   , sys = require('sys')
   , piblaster = require('pi-blaster.js')
-  , gpio = require('rpi-gpio')
   , sleep = require('sleep')
   , argv = require('optimist').argv;
   app.listen(8080);
@@ -23,10 +22,10 @@ function handler(request, response)
 
 var pin_przyspieszenie = 17;
 var pin_skretu = 18;
-var pin_przod = 7;//19;
-var pin_wsteczny = 7;//26;
-var pin_wlewo = 7;//16;
-var pin_wprawo = 7;//20;
+var pin_przod = 22;
+var pin_wsteczny = 25;
+var pin_wlewo = 23;
+var pin_wprawo = 24;
 var logcount = 0;
 var przyspieszenie = 0; //w %
 var skret = 0;
@@ -35,29 +34,7 @@ var opoznienie_skrecania = 0.10;
 
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
 
-function pyklo() {
-	console.log("Config pinow OK");
-}
-
-//gpio.setMode('mode_bcm');
-//set all pins as output
-gpio.setup(pin_przod, gpio.DIR_OUT,pyklo);//, write);
-gpio.setup(pin_wsteczny, gpio.DIR_OUT,pyklo);//, write);
-gpio.setup(pin_wlewo, gpio.DIR_OUT,pyklo);//, write);
-gpio.setup(pin_wprawo, gpio.DIR_OUT,pyklo);//, write);
-
 lastAction = "";
-
-//function for controlling GPIO using rpi-gpio module
-function setPin ()
-{
-	gpio.setup(pinNo, gpio.DIR_OUT, function() {
-	    gpio.write(pinNo, pinSw, function(err) {
-        	if (err) throw err;
-	 	console.log('Written to pin');
-	    });
-	});
-}
 
 
 //If we lose comms set the servos to neutral
@@ -67,15 +44,10 @@ function emergencyStop()
 	//enter 0 point here specific to your pwm control
   	piblaster.setPwm(pin_przyspieszenie, 0);
  	piblaster.setPwm(pin_skretu, 0);
- 	pinSw = false;
- 	pinNo = pin_przod;
- 	setPin();
- 	pinNo = pin_wsteczny;
- 	setPin();
- 	pinNo = pin_wlewo;
- 	setPin();
- 	pinNo = pin_wprawo;
- 	setPin();
+ 	piblaster.setPwm(pin_przod, 0);
+ 	piblaster.setPwm(pin_wsteczny, 0);
+ 	piblaster.setPwm(pin_wlewo, 0);
+ 	piblaster.setPwm(pin_wprawo, 0);
 
   	console.log('###EMERGENCY STOP - signal lost or shutting down');
 }//END emergencyStop
@@ -100,21 +72,13 @@ io.sockets.on('connection', function (socket)
 		
 		if(temp_kierunek >= 0)
 		{
-		 	pinSw = true;
-		 	pinNo = pin_przod;
-		 	setPin();
-		 	pinSw = false;
-		 	pinNo = pin_wsteczny;
-		 	setPin();
+		 	piblaster.setPwm(pin_przod, 1);	
+			piblaster.setPwm(pin_wsteczny, 0);
 		}
 		else 
 		{
-		 	pinSw = false;
-		 	pinNo = pin_przod;
-		 	setPin();
-		 	pinSw = true;
-		 	pinNo = pin_wsteczny;
-		 	setPin();
+		 	piblaster.setPwm(pin_przod, 0);	
+			piblaster.setPwm(pin_wsteczny, 1);
  			temp_kierunek = Math.abs(temp_kierunek);
 		}
 		
@@ -133,21 +97,13 @@ io.sockets.on('connection', function (socket)
 	
 		if(temp_skret >= 0)
 		{
-		 	pinSw = true;
-		 	pinNo = pin_wlewo;
-		 	setPin();
-		 	pinSw = false;
-		 	pinNo = pin_wprawo;
-		 	setPin();
+		 	piblaster.setPwm(pin_wlewo, 1);	
+			piblaster.setPwm(pin_wprawo, 0);
 		}
 		else
 		{
-		 	pinSw = false;
-		 	pinNo = pin_wlewo;
-		 	setPin();
-		 	pinSw = true;
-		 	pinNo = pin_wprawo;
-		 	setPin();
+		 	piblaster.setPwm(pin_wlewo, 0);	
+			piblaster.setPwm(pin_wprawo, 1);
  			Math.abs(temp_skret);
 		}
 			
