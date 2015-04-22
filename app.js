@@ -141,11 +141,13 @@ io.sockets.on('connection', function (socket)
 			{
 				piblaster.setPwm(pin_wlewo, 1);	
 				piblaster.setPwm(pin_wprawo, 0);
+				piblaster.setPwm(pin_skretu, 0.25); //throttle using soft pwm
 			}
 			if(aktualny_skret == 0 && zolty == 0) // kola sa skrecone w lewo
 			{
 				piblaster.setPwm(pin_wlewo, 0);	
 				piblaster.setPwm(pin_wprawo, 1);
+				piblaster.setPwm(pin_skretu, 0.25); //throttle using soft pwm
 			}
 		}
 		if(kierunek_skretu == 0 && temp_skret > 0)
@@ -154,7 +156,7 @@ io.sockets.on('connection', function (socket)
 			piblaster.setPwm(pin_wprawo, 0);
 			if(niebieski == 1 && zielony == 1 && aktualny_skret == 0)
 			{
-				skret = 0;
+				temp_skret = 0;
 			}
 		}
 		if(kierunek_skretu == 1 && temp_skret > 0)
@@ -163,7 +165,7 @@ io.sockets.on('connection', function (socket)
 			piblaster.setPwm(pin_wprawo, 1);
 			if(niebieski == 1 && zielony == 1 && aktualny_skret == 1)
 			{
-				skret = 0;
+				temp_skret = 0;
 			}
 		}
 		if(niebieski == 1 && zielony == 0) {aktualny_skret = 0;}
