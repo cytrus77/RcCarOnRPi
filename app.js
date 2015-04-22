@@ -106,7 +106,6 @@ io.sockets.on('connection', function (socket)
 		obiekt_niebieski.read(function(err, value) {
 			 niebieski = value;
 			});
-		console.log("Zolty "+zolty+" Zielony: "+zielony + " Niebieski: "+niebieski);
 		
 		if(temp_kierunek >= 0)
 		{
@@ -204,6 +203,8 @@ io.sockets.on('connection', function (socket)
 		{
 			//@ 2 Hz
 			logcount = 0;
+			console.log("aktualny_skret "+aktualny_skret);
+			console.log("Zolty "+zolty+" Zielony: "+zielony + " Niebieski: "+niebieski);
 			console.log("Beta: "+data.beta+" Gamma: "+data.gamma);
 			console.log("Przyspieszenie: "+Math.round(przyspieszenie*100)+"%  Skret: "+Math.round(skret*100)+"%");
 		}
