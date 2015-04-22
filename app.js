@@ -69,7 +69,6 @@ io.sockets.on('connection', function (socket)
 		
 		temp_kierunek = data.gamma / 45;
 		temp_skret = data.beta / 45;
-		if(Math.abs(temp_kierunek < 0.05)) temp_kierunek = 0;
 		
 		if(temp_kierunek >= 0)
 		{
@@ -82,7 +81,7 @@ io.sockets.on('connection', function (socket)
 			piblaster.setPwm(pin_wsteczny, 1);
  			temp_kierunek = Math.abs(temp_kierunek);
 		}
-		
+		if(temp_kierunek < 0.05) temp_kierunek = 0;
 		if(temp_kierunek > 1) {temp_kierunek = 1;}
 			
 		if( Math.abs(temp_kierunek - przyspieszenie) < opoznienie_przyspieszenia)
