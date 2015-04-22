@@ -5,7 +5,7 @@ var app = require('http').createServer(handler)
   , static = require('node-static')
   , sys = require('sys')
   , piblaster = require('pi-blaster.js')
-  , Gpio = require('onoff').Gpio,
+  , Gpio = require('onoff').Gpio
   , sleep = require('sleep')
   , argv = require('optimist').argv;
   app.listen(8080);
