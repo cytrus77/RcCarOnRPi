@@ -39,7 +39,7 @@ function pyklo() {
 	console.log("Config pinow OK");
 }
 
-gpio.setMode('MODE_BCM');
+gpio.setMode('mode_bcm');
 //set all pins as output
 gpio.setup(pin_przod, gpio.DIR_OUT,pyklo);//, write);
 gpio.setup(pin_wsteczny, gpio.DIR_OUT,pyklo);//, write);
