@@ -23,10 +23,10 @@ function handler(request, response)
 
 var pin_przyspieszenie = 17;
 var pin_skretu = 18;
-var pin_przod = 27;
-var pin_wsteczny = 22;
-var pin_wlewo = 23;
-var pin_wprawo = 24;
+var pin_przod = 19;
+var pin_wsteczny = 26;
+var pin_wlewo = 16;
+var pin_wprawo = 20;
 var logcount = 0;
 var przyspieszenie = 0; //w %
 var skret = 0;
