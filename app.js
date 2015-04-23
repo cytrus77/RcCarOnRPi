@@ -49,6 +49,8 @@ var aktualny_skret = 0;
 var opoznienie_przyspieszenia = 0.02;
 var opoznienie_skrecania = 0.25;
 var bezpiecznik = 0;
+var przod = 0, wsteczny = 0;
+var wlewo = 0, wprawo = 0;
 var przod_old = 0, wsteczny_old = 0;
 var wlewo_old = 0, wprawo_old = 0;
 var przyspieszenie_old = 0, skret_old = 0;
@@ -129,8 +131,6 @@ io.sockets.on('connection', function (socket)
 	socket.on('fromclient', function (data) 
 	{
 		var temp_kierunek, temp_skret;
-		var przod, wsteczny;
-		var wlewo, wprawo;
 		
 		logcount = logcount + 1;
 		
