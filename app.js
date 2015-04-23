@@ -235,8 +235,8 @@ io.sockets.on('connection', function (socket)
 				break;
 		}
 		
-		if(wlewo != wlewo_old)	{piblaster.setPwm(pin_wlewo, wlewo);}
-		if(wprawo != wprawo_old) {piblaster.setPwm(pin_wprawo, wprawo);}
+		//if(wlewo != wlewo_old)	{piblaster.setPwm(pin_wlewo, wlewo);}
+		//if(wprawo != wprawo_old) {piblaster.setPwm(pin_wprawo, wprawo);}
 		skret = temp_skret;
 		
 		
@@ -255,7 +255,7 @@ io.sockets.on('connection', function (socket)
 		//control car using clever pwm gpio library
 		
 		if(przyspieszenie != przyspieszenie_old) {piblaster.setPwm(pin_przyspieszenie, przyspieszenie);} //throttle using soft pwm
-		if(skret != skret_old) {piblaster.setPwm(pin_skretu, skret);} //throttle using soft pwm
+		//if(skret != skret_old) {piblaster.setPwm(pin_skretu, skret);} //throttle using soft pwm
 		
 		przod_old = przod;
 		wsteczny_old = wsteczny;
