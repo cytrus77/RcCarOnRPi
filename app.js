@@ -50,7 +50,7 @@ var opoznienie_przyspieszenia = 0.02;
 var opoznienie_skrecania = 0.25;
 var bezpiecznik = 0;
 
-center_wheels();
+//center_wheels();
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
 
 
@@ -153,13 +153,10 @@ io.sockets.on('connection', function (socket)
  			temp_kierunek = Math.abs(temp_kierunek);
 		}
 		
-		if(temp_kierunek < 0.15) temp_kierunek = 0;
-		if(temp_kierunek > 1) {temp_kierunek = 1;}
+		if(temp_kierunek < 0.20) {temp_kierunek = 0;}
+		else if(temp_kierunek > 1) {temp_kierunek = 1;}
 			
-		if( Math.abs(temp_kierunek - przyspieszenie) < opoznienie_przyspieszenia)
-		{
-			przyspieszenie = temp_kierunek;
-		}
+		if( Math.abs(temp_kierunek - przyspieszenie) < opoznienie_przyspieszenia) { przyspieszenie = temp_kierunek; }
 		else
 		{
 			if(temp_kierunek > przyspieszenie) { przyspieszenie = przyspieszenie + opoznienie_przyspieszenia;}
@@ -167,12 +164,12 @@ io.sockets.on('connection', function (socket)
 		}
 	
 	
-		if(Math.abs(temp_skret) < 0.1) {kierunek_skretu = 1;}
+		if(Math.abs(temp_skret) < 0.15) {kierunek_skretu = 1;}
 		else if(temp_skret > 0) {kierunek_skretu = 2;}
 		else if(temp_skret < 0) {kierunek_skretu = 0;}
 		temp_skret = Math.abs(temp_skret);
-		if(temp_skret < 0.1) temp_skret = 0;	
-		if(temp_skret > 1) {temp_skret = 1;}
+		if(temp_skret < 0.15) {temp_skret = 0;}
+		else if(temp_skret > 1) {temp_skret = 1;}
 		
 		if(niebieski == 1 && zielony == 0) {aktualny_skret = 0;}
 		else if(niebieski == 0 && zielony == 1) {aktualny_skret = 2;}
