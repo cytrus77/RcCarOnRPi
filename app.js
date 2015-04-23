@@ -159,7 +159,7 @@ io.sockets.on('connection', function (socket)
 		}
 		
 		if(temp_kierunek < 0.20) {temp_kierunek = 0;}
-		else if(temp_kierunek > 1) {temp_kierunek = 1;}
+		else if(temp_kierunek > 0.3) {temp_kierunek = 0.3;}
 			
 		if( Math.abs(temp_kierunek - przyspieszenie) < opoznienie_przyspieszenia) { przyspieszenie = temp_kierunek; }
 		else
