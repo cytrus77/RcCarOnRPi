@@ -49,6 +49,9 @@ var aktualny_skret = 0;
 var opoznienie_przyspieszenia = 0.02;
 var opoznienie_skrecania = 0.25;
 var bezpiecznik = 0;
+var przod_old = 0, wsteczny_old = 0;
+var wlewo_old = 0, wprawo_old = 0;
+var przyspieszenie_old = 0, skret_old = 0;
 
 //center_wheels();
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
@@ -126,6 +129,8 @@ io.sockets.on('connection', function (socket)
 	socket.on('fromclient', function (data) 
 	{
 		var temp_kierunek, temp_skret;
+		var przod, wsteczny;
+		var wlewo, wprawo;
 		
 		logcount = logcount + 1;
 		
@@ -143,13 +148,13 @@ io.sockets.on('connection', function (socket)
 		
 		if(temp_kierunek >= 0)
 		{
-		 	piblaster.setPwm(pin_przod, 1);	
-			piblaster.setPwm(pin_wsteczny, 0);
+		 	przod = 1;	
+			wsteczny = 0;
 		}
 		else 
 		{
-		 	piblaster.setPwm(pin_przod, 0);	
-			piblaster.setPwm(pin_wsteczny, 1);
+		 	przod = 0;	
+			wsteczny = 1;
  			temp_kierunek = Math.abs(temp_kierunek);
 		}
 		
@@ -162,8 +167,11 @@ io.sockets.on('connection', function (socket)
 			if(temp_kierunek > przyspieszenie) { przyspieszenie = przyspieszenie + opoznienie_przyspieszenia;}
 			else { przyspieszenie = przyspieszenie - opoznienie_przyspieszenia;}
 		}
+		
+	 	if(przod != przod_old) {piblaster.setPwm(pin_przod, przod);}
+		if(wsteczny != wsteczny_old) {piblaster.setPwm(pin_wsteczny, wsteczny);}
 	
-	
+		// Poczatek sekcji skretu
 		if(Math.abs(temp_skret) < 0.15) {kierunek_skretu = 1;}
 		else if(temp_skret > 0) {kierunek_skretu = 2;}
 		else if(temp_skret < 0) {kierunek_skretu = 0;}
@@ -177,11 +185,11 @@ io.sockets.on('connection', function (socket)
 		
 		switch(kierunek_skretu){
 			case 0:
-				piblaster.setPwm(pin_wlewo, 1);	
-				piblaster.setPwm(pin_wprawo, 0);
+				wlewo = 1;	
+				wprawo = 0;
 				if(niebieski == 1 && zielony == 1 && aktualny_skret == 0)
 				{
-					piblaster.setPwm(pin_wlewo, 0);	
+					wlewo = 0;	
 					temp_skret = 0;
 				//	bezpiecznik_skretu();
 				}
@@ -189,48 +197,50 @@ io.sockets.on('connection', function (socket)
 			case 1:
 				if(aktualny_skret == 1) //kola sa juz prosto
 				{
-		 			piblaster.setPwm(pin_wlewo, 0);	
-					piblaster.setPwm(pin_wprawo, 0);
+		 			wlewo = 0;	
+					wprawo = 0;
 					temp_skret = 0;
 				}
 				else if(aktualny_skret == 2 ) // kola sa skrecone w prawo
 				{
-					piblaster.setPwm(pin_wlewo, 1);	
-					piblaster.setPwm(pin_wprawo, 0);
+					wlewo = 1;	
+					wprawo = 0;
 					temp_skret = 0.2;
 				//	bezpiecznik_skretu();
 				}
 				else if(aktualny_skret == 0) // kola sa skrecone w lewo
 				{
-					piblaster.setPwm(pin_wlewo, 0);	
-					piblaster.setPwm(pin_wprawo, 1);
+					wlewo = 0;	
+					wprawo = 1;
 					temp_skret = 0.2;
 				//	bezpiecznik_skretu();
 				}
 				break;
 			case 2:
-				piblaster.setPwm(pin_wlewo, 0);	
-				piblaster.setPwm(pin_wprawo, 1);
+				wlewo = 0;	
+				wprawo = 1;
 				if(niebieski == 1 && zielony == 1 && aktualny_skret == 2)
 				{
-					piblaster.setPwm(pin_wprawo, 0);
+					wprawo = 0;
 					temp_skret = 0;
 				//	bezpiecznik_skretu();
 				}
 				break;
 			default:
-				piblaster.setPwm(pin_wlewo, 0);	
-				piblaster.setPwm(pin_wprawo, 0);
+				wlewo = 0;	
+				wprawo = 0;
 				temp_skret = 0;
 				break;
 		}
 		
+		if(wlewo != wlewo_old)	{piblaster.setPwm(pin_wlewo, wlewo);}
+		if(wprawo != wprawo_old) {piblaster.setPwm(pin_wprawo, wprawo);}
 		skret = temp_skret;
 		
 		
 		// dont let char echos slow dn the app; we are running at 20Hz
 		// dont le the console limit this due to slow echoing of chars
-		if(logcount > 25)
+		if(logcount > 20)
 		{
 			//@ 2 Hz
 			logcount = 0;
@@ -241,8 +251,16 @@ io.sockets.on('connection', function (socket)
 		}
 
 		//control car using clever pwm gpio library
-		piblaster.setPwm(pin_przyspieszenie, przyspieszenie); //throttle using soft pwm
-		piblaster.setPwm(pin_skretu, skret); //throttle using soft pwm
+		
+		if(przyspieszenie != przyspieszenie_old) {piblaster.setPwm(pin_przyspieszenie, przyspieszenie);} //throttle using soft pwm
+		if(skret != skret_old) {piblaster.setPwm(pin_skretu, skret);} //throttle using soft pwm
+		
+		przod_old = przod;
+		wsteczny_old = wsteczny;
+		wlewo_old = wlewo;
+		wprawo_old = wprawo;
+		przyspieszenie_old = przyspieszenie;
+		skret_old = skret;
 		
 		clearInterval(lastAction); //stop emergency stop timer
 		lastAction = setInterval(emergencyStop,2000); //set emergency stop timer for 1 second
