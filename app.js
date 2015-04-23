@@ -39,8 +39,8 @@ var obiekt_niebieski = new Gpio(pin_niebieski, 'in');
 
 //zmienne
 var zolty = 0;
-var zielony = 1;
-var niebieski = 1;
+var zielony = 0;
+var niebieski = 0;
 var logcount = 0;
 var przyspieszenie = 0; //w %
 var skret = 0;
@@ -50,7 +50,9 @@ var opoznienie_przyspieszenia = 0.02;
 var opoznienie_skrecania = 0.25;
 var bezpiecznik = 0;
 
+center_wheels();
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
+
 
 lastAction = "";
 
@@ -63,6 +65,38 @@ function bezpiecznik_skretu()
 		else if(aktualny_skret == 2) {aktualny_skret = 0;}
 		bezpiecznik = 0;
 	}
+}
+
+function center_wheels()
+{
+	piblaster.setPwm(pin_wlewo, 1);	
+	piblaster.setPwm(pin_wprawo, 0);
+	piblaster.setPwm(pin_skretu, 0.5); //throttle using soft pwm
+	while(!(niebieski == 1 && zielony == 1))
+	{
+		piblaster.setPwm(pin_skretu, 0.2);
+		obiekt_zielony.read(function(err, value) {
+			 zielony = value;
+			});
+		obiekt_niebieski.read(function(err, value) {
+			 niebieski = value;
+			});
+	}
+	piblaster.setPwm(pin_skretu, 0);
+	
+	piblaster.setPwm(pin_wlewo, 0);	
+	piblaster.setPwm(pin_wprawo, 1);
+	while(!(zolty == 1))
+	{
+		piblaster.setPwm(pin_skretu, 0.1);
+		obiekt_zolty.read(function(err, value) {
+			 zolty = value;
+			});
+	}
+	piblaster.setPwm(pin_skretu, 0);
+	aktualny_skret = 1;
+	
+	console.log('Kalibracja ukonczona');
 }
 
 //If we lose comms set the servos to neutral
@@ -152,7 +186,7 @@ io.sockets.on('connection', function (socket)
 				{
 					piblaster.setPwm(pin_wlewo, 0);	
 					temp_skret = 0;
-					bezpiecznik_skretu();
+				//	bezpiecznik_skretu();
 				}
 				break;
 			case 1:
@@ -167,14 +201,14 @@ io.sockets.on('connection', function (socket)
 					piblaster.setPwm(pin_wlewo, 1);	
 					piblaster.setPwm(pin_wprawo, 0);
 					temp_skret = 0.2;
-					bezpiecznik_skretu();
+				//	bezpiecznik_skretu();
 				}
 				else if(aktualny_skret == 0) // kola sa skrecone w lewo
 				{
 					piblaster.setPwm(pin_wlewo, 0);	
 					piblaster.setPwm(pin_wprawo, 1);
 					temp_skret = 0.2;
-					bezpiecznik_skretu();
+				//	bezpiecznik_skretu();
 				}
 				break;
 			case 2:
@@ -184,7 +218,7 @@ io.sockets.on('connection', function (socket)
 				{
 					piblaster.setPwm(pin_wprawo, 0);
 					temp_skret = 0;
-					bezpiecznik_skretu();
+				//	bezpiecznik_skretu();
 				}
 				break;
 			default:
