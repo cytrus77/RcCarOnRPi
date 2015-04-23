@@ -159,14 +159,16 @@ io.sockets.on('connection', function (socket)
 		}
 		
 		if(temp_kierunek < 0.20) {temp_kierunek = 0;}
-		else if(temp_kierunek > 0.3) {temp_kierunek = 0.3;}
-			
+		else if(temp_kierunek > 1) {temp_kierunek = 1;}
+		
+		/*	
 		if( Math.abs(temp_kierunek - przyspieszenie) < opoznienie_przyspieszenia) { przyspieszenie = temp_kierunek; }
 		else
 		{
 			if(temp_kierunek > przyspieszenie) { przyspieszenie = przyspieszenie + opoznienie_przyspieszenia;}
 			else { przyspieszenie = przyspieszenie - opoznienie_przyspieszenia;}
-		}
+		}*/
+		 przyspieszenie = temp_kierunek;
 		
 	 	if(przod != przod_old) {piblaster.setPwm(pin_przod, przod);}
 		if(wsteczny != wsteczny_old) {piblaster.setPwm(pin_wsteczny, wsteczny);}
@@ -177,7 +179,7 @@ io.sockets.on('connection', function (socket)
 		else if(temp_skret < 0) {kierunek_skretu = 0;}
 		temp_skret = Math.abs(temp_skret);
 		if(temp_skret < 0.15) {temp_skret = 0;}
-		else if(temp_skret > 1) {temp_skret = 1;}
+		else if(temp_skret > 0.3) {temp_skret = 0.3;}
 		
 		if(niebieski == 1 && zielony == 0) {aktualny_skret = 0;}
 		else if(niebieski == 0 && zielony == 1) {aktualny_skret = 2;}
